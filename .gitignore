@@ -21,13 +21,13 @@ uv.lock
 
 # Environment
 .env
-.env.*
 
 # Model cache
 model_cache/
 
 # Testing
 .pytest_cache/
+pytest-cache*/
 .coverage
 htmlcov/
 .tox/

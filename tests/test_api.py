@@ -4,6 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from src.main import app
+from src.ml_service import get_ml_service
 
 
 @pytest.fixture
@@ -40,6 +41,18 @@ def test_model_info_endpoint(client):
     assert "model_name" in data
     assert "device" in data
     assert "loaded" in data
+
+
+def test_model_is_loaded(client):
+    """Test the model is loaded."""
+    client.post(
+        "/predict",
+        json={"text": "warm-up"}
+    )
+    response = client.get("/model/info")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["loaded"] == True
 
 
 def test_predict_positive_sentiment(client):
@@ -91,3 +104,4 @@ def test_predict_whitespace_text(client):
     """Test prediction with only whitespace."""
     response = client.post("/predict", json={"text": "   \n\t   "})
     assert response.status_code == 422  # Should fail validation
+

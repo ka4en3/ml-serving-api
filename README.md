@@ -23,16 +23,10 @@ REST API for serving ML models using FastAPI.
 
 1. Clone the repository:
 ```bash
-cd ml-serving-api
+git clone https://github.com/ka4en3/ml-serving-api.git
 ```
 
-2. Install UV (if not already installed):
-```powershell
-# PowerShell (as Administrator)
-powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
-
-3. Create virtual environment and install dependencies:
+2. Create virtual environment and install dependencies:
 ```bash
 uv venv
 uv sync
@@ -40,11 +34,7 @@ uv sync
 
 ### Running the Application
 
-1. Activate the virtual environment:
-```powershell
-# Windows PowerShell
-.venv\Scripts\Activate.ps1
-```
+1. Activate the virtual environment.
 
 2. Start the server:
 ```bash
@@ -110,8 +100,7 @@ ml-serving-api/
 ├── .env                     # Environment variables
 ├── .gitignore
 ├── pyproject.toml           # Project configuration for UV
-├── README.md
-└── requirements.txt         # For compatibility 
+└── README.md 
 ```
 
 ## Environment Variables

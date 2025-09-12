@@ -101,7 +101,7 @@ async def model_info():
 @app.post(
     "/predict",
     response_model=PredictionResponse,
-    responses={
+    responses={ # only for documentation
         400: {"model": ErrorResponse, "description": "Invalid input"},
         500: {"model": ErrorResponse, "description": "Model error"}
     }
@@ -119,7 +119,6 @@ async def predict(request: PredictionRequest):
     try:
         result = ml_service.predict(request.text)
         return PredictionResponse(**result)
-
     except RuntimeError as e:
         logger.error(f"Prediction error: {str(e)}")
         raise HTTPException(
@@ -143,6 +142,7 @@ async def http_exception_handler(request, exc):
     )
 
 
+# Custom exception handler for general exceptions, used for unhandled exceptions
 @app.exception_handler(Exception)
 async def general_exception_handler(request, exc):
     """Custom exception handler for general exceptions."""

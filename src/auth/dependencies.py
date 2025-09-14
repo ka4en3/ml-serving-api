@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
+async def get_current_active_user(token: str = Depends(oauth2_scheme)) -> dict:
     """
     Get current user from JWT token.
 
@@ -46,11 +46,11 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
         if username is None or user_id is None:
             raise credentials_exception
 
-        token_data = TokenData(
-            username=username,
-            user_id=user_id,
-            role=UserRole(role) if role else None
-        )
+        # token_data = TokenData(
+        #     username=username,
+        #     user_id=user_id,
+        #     role=UserRole(role) if role else None
+        # )
 
     except JWTError as e:
         logger.error(f"JWT validation error: {str(e)}")
@@ -60,7 +60,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
         raise credentials_exception
 
     # Get user from database
-    user = get_user_by_id(token_data.user_id)
+    user = get_user_by_id(user_id)
     if user is None:
         raise credentials_exception
 
@@ -74,27 +74,27 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
     return user
 
 
-async def get_current_active_user(
-        current_user: dict = Depends(get_current_user)
-) -> dict:
-    """
-    Get current active user.
-
-    Args:
-        current_user: User data from token
-
-    Returns:
-        Active user data
-
-    Raises:
-        HTTPException: If user is inactive
-    """
-    if not current_user.get("is_active", False):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Inactive user"
-        )
-    return current_user
+# async def get_current_active_user(
+#         current_user: dict = Depends(get_current_user)
+# ) -> dict:
+#     """
+#     Get current active user.
+#
+#     Args:
+#         current_user: User data from token
+#
+#     Returns:
+#         Active user data
+#
+#     Raises:
+#         HTTPException: If user is inactive
+#     """
+#     if not current_user.get("is_active", False):
+#         raise HTTPException(
+#             status_code=status.HTTP_403_FORBIDDEN,
+#             detail="Inactive user"
+#         )
+#     return current_user
 
 
 def require_role(allowed_roles: List[UserRole]):

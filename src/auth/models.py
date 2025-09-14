@@ -95,7 +95,7 @@ class PasswordChange(BaseModel):
         description="New password"
     )
 
-    @field_validator("password")
+    @field_validator("new_password")
     @classmethod
     def validate_password(cls, v: str) -> str:
         """Validate password strength."""

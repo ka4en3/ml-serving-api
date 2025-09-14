@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     """Application settings with environment variable support."""
 
     app_name: str = "ML Model Serving API"
-    version: str = "0.1.0"
+    version: str = "0.2.0"
     debug: bool = False
 
     # Model configuration
@@ -23,6 +23,14 @@ class Settings(BaseSettings):
 
     # CORS settings
     allow_origins: list[str] = ["*"]
+
+    # Security settings
+    secret_key: str = "secret_key"
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
+
+    # Rate limiting
+    rate_limit_per_minute: int = 60
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=False)
 

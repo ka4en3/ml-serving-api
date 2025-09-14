@@ -79,10 +79,10 @@ class TokenData(BaseModel):
     scopes: List[str] = Field(default_factory=list)
 
 
-class LoginRequest(BaseModel):
-    """Login request model."""
-    username: str = Field(..., description="Username or email")
-    password: str = Field(..., description="Password")
+# class LoginRequest(BaseModel):
+#     """Login request model."""
+#     username: str = Field(..., description="Username or email")
+#     password: str = Field(..., description="Password")
 
 
 class PasswordChange(BaseModel):
@@ -94,3 +94,15 @@ class PasswordChange(BaseModel):
         max_length=100,
         description="New password"
     )
+
+    @field_validator("password")
+    @classmethod
+    def validate_password(cls, v: str) -> str:
+        """Validate password strength."""
+        if not any(char.isdigit() for char in v):
+            raise ValueError("Password must contain at least one digit")
+        if not any(char.isupper() for char in v):
+            raise ValueError("Password must contain at least one uppercase letter")
+        if not any(char.islower() for char in v):
+            raise ValueError("Password must contain at least one lowercase letter")
+        return v

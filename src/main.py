@@ -116,7 +116,7 @@ async def register(user: UserCreate):
     Default role is 'user'. Only admins can create users with different roles.
     """
     try:
-        user_data = user.dict()
+        user_data = user.model_dump()
         # Force regular user role for self-registration
         user_data["role"] = UserRole.USER
 

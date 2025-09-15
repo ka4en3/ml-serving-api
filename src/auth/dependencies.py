@@ -64,6 +64,12 @@ async def get_current_active_user(token: str = Depends(oauth2_scheme)) -> dict:
     if user is None:
         raise credentials_exception
 
+    # Check if token data matches user data
+    if user.get("username") != username:
+        raise credentials_exception
+    if user.get("role") != role:
+        raise credentials_exception
+
     # Check if user is active
     if not user.get("is_active", False):
         raise HTTPException(

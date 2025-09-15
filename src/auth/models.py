@@ -79,12 +79,6 @@ class TokenData(BaseModel):
     scopes: List[str] = Field(default_factory=list)
 
 
-class LoginRequest(BaseModel):
-    """Login request model."""
-    username: str = Field(..., description="Username or email")
-    password: str = Field(..., description="Password")
-
-
 class PasswordChange(BaseModel):
     """Password change request model."""
     current_password: str = Field(..., description="Current password")

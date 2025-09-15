@@ -80,29 +80,6 @@ async def get_current_active_user(token: str = Depends(oauth2_scheme)) -> dict:
     return user
 
 
-# async def get_current_active_user(
-#         current_user: dict = Depends(get_current_user)
-# ) -> dict:
-#     """
-#     Get current active user.
-#
-#     Args:
-#         current_user: User data from token
-#
-#     Returns:
-#         Active user data
-#
-#     Raises:
-#         HTTPException: If user is inactive
-#     """
-#     if not current_user.get("is_active", False):
-#         raise HTTPException(
-#             status_code=status.HTTP_403_FORBIDDEN,
-#             detail="Inactive user"
-#         )
-#     return current_user
-
-
 def require_role(allowed_roles: List[UserRole]):
     """
     Dependency factory for role-based access control.

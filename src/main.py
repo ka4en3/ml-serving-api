@@ -168,7 +168,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 @app.get("/users/me", response_model=UserResponse)
 async def get_current_user_info(
-    current_user: dict = Depends(get_current_active_user)
+        current_user: dict = Depends(get_current_active_user)
 ):
     """Get current user information."""
     return UserResponse(**current_user)
@@ -176,8 +176,8 @@ async def get_current_user_info(
 
 @app.put("/users/me/password")
 async def change_password(
-    password_change: PasswordChange,
-    current_user: dict = Depends(get_current_active_user)
+        password_change: PasswordChange,
+        current_user: dict = Depends(get_current_active_user)
 ):
     """Change current user password."""
     # Verify current password
@@ -201,9 +201,9 @@ async def change_password(
 
 @app.get("/admin/users", response_model=list[UserResponse])
 async def get_all_users(
-    skip: int = 0,
-    limit: int = 100,
-    current_user: dict = Depends(require_admin)
+        skip: int = 0,
+        limit: int = 100,
+        current_user: dict = Depends(require_admin)
 ):
     """
     Get all users (admin only).
@@ -216,8 +216,8 @@ async def get_all_users(
 
 @app.post("/admin/users", response_model=UserResponse)
 async def create_user_admin(
-    user: UserCreate,
-    current_user: dict = Depends(require_admin)
+        user: UserCreate,
+        current_user: dict = Depends(require_admin)
 ):
     """
     Create a new user with any role (admin only).
@@ -225,7 +225,7 @@ async def create_user_admin(
     Requires admin role.
     """
     try:
-        created_user = create_user(user.dict())
+        created_user = create_user(user.model_dump())
         return UserResponse(**created_user)
     except ValueError as e:
         raise HTTPException(
@@ -236,14 +236,16 @@ async def create_user_admin(
 
 @app.delete("/admin/users/{user_id}")
 async def delete_user_admin(
-    user_id: str,
-    current_user: dict = Depends(require_admin)
+        user_id: str,
+        current_user: dict = Depends(require_admin)
 ):
     """
     Delete a user (admin only).
 
     Requires admin role.
     """
+    user_id = user_id.strip()
+
     if user_id == current_user["id"]:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -263,7 +265,7 @@ async def delete_user_admin(
 
 @app.get("/model/info", response_model=dict)
 async def model_info(
-    current_user: dict = Depends(get_current_active_user)
+        current_user: dict = Depends(get_current_active_user)
 ):
     """
     Get information about the loaded model.
@@ -281,14 +283,14 @@ async def model_info(
 @app.post(
     "/predict",
     response_model=PredictionResponse,
-    responses={ # only for documentation
+    responses={  # only for documentation
         400: {"model": ErrorResponse, "description": "Invalid input"},
         500: {"model": ErrorResponse, "description": "Model error"}
     }
 )
 async def predict(
-    request: PredictionRequest,
-    current_user: dict = Depends(require_user)
+        request: PredictionRequest,
+        current_user: dict = Depends(require_user)
 ):
     """
     Make a prediction on the input text.
